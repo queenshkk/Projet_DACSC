@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/Server.dir/ClientBookEncoderQt/ServerEncodage.cpp.o CMakeFiles/Server.dir/ClientBookEncoderQt/TCP.cpp.o CMakeFiles/Server.dir/ClientBookEncoderQt/OBEP.cpp.o -o Server  -lpthread 

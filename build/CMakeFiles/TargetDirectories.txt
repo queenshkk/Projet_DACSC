@@ -1,0 +1,5 @@
+/home/student/Documents/B3/DACSC/Projet_DACSC/build/CMakeFiles/rebuild_cache.dir
+/home/student/Documents/B3/DACSC/Projet_DACSC/build/CMakeFiles/edit_cache.dir
+/home/student/Documents/B3/DACSC/Projet_DACSC/build/CMakeFiles/Server.dir
+/home/student/Documents/B3/DACSC/Projet_DACSC/build/CMakeFiles/ApplicLivre.dir
+/home/student/Documents/B3/DACSC/Projet_DACSC/build/CMakeFiles/Client.dir

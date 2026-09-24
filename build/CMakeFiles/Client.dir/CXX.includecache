@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/student/Documents/B3/DACSC/Projet_DACSC/ClientBookEncoderQt/ClientEncodage.cpp
+stdio.h
+-
+stdlib.h
+-
+unistd.h
+-
+string.h
+-
+signal.h
+-
+TCP.h
+/home/student/Documents/B3/DACSC/Projet_DACSC/ClientBookEncoderQt/TCP.h
+
+/home/student/Documents/B3/DACSC/Projet_DACSC/ClientBookEncoderQt/TCP.h
+
