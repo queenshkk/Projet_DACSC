@@ -130,6 +130,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named CreationBD
+
+# Build rule for target.
+CreationBD: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CreationBD
+.PHONY : CreationBD
+
+# fast build rule for target.
+CreationBD/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CreationBD.dir/build.make CMakeFiles/CreationBD.dir/build
+.PHONY : CreationBD/fast
+
+#=============================================================================
 # Target rules for targets named Server
 
 # Build rule for target.
@@ -167,6 +180,33 @@ Client: cmake_check_build_system
 Client/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Client.dir/build.make CMakeFiles/Client.dir/build
 .PHONY : Client/fast
+
+BD_Books/CreationBD.o: BD_Books/CreationBD.cpp.o
+
+.PHONY : BD_Books/CreationBD.o
+
+# target to build an object file
+BD_Books/CreationBD.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CreationBD.dir/build.make CMakeFiles/CreationBD.dir/BD_Books/CreationBD.cpp.o
+.PHONY : BD_Books/CreationBD.cpp.o
+
+BD_Books/CreationBD.i: BD_Books/CreationBD.cpp.i
+
+.PHONY : BD_Books/CreationBD.i
+
+# target to preprocess a source file
+BD_Books/CreationBD.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CreationBD.dir/build.make CMakeFiles/CreationBD.dir/BD_Books/CreationBD.cpp.i
+.PHONY : BD_Books/CreationBD.cpp.i
+
+BD_Books/CreationBD.s: BD_Books/CreationBD.cpp.s
+
+.PHONY : BD_Books/CreationBD.s
+
+# target to generate assembly for a file
+BD_Books/CreationBD.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CreationBD.dir/build.make CMakeFiles/CreationBD.dir/BD_Books/CreationBD.cpp.s
+.PHONY : BD_Books/CreationBD.cpp.s
 
 ClientBookEncoderQt/ClientEncodage.o: ClientBookEncoderQt/ClientEncodage.cpp.o
 
@@ -370,7 +410,11 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... ApplicLivre"
 	@echo "... Client"
+	@echo "... CreationBD"
 	@echo "... Server"
+	@echo "... BD_Books/CreationBD.o"
+	@echo "... BD_Books/CreationBD.i"
+	@echo "... BD_Books/CreationBD.s"
 	@echo "... ClientBookEncoderQt/ClientEncodage.o"
 	@echo "... ClientBookEncoderQt/ClientEncodage.i"
 	@echo "... ClientBookEncoderQt/ClientEncodage.s"

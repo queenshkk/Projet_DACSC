@@ -32,6 +32,18 @@ add_executable(Server
     ClientBookEncoderQt/OBEP.cpp
 )
 
+add_executable(CreationBD
+    BD_Books/CreationBD.cpp
+)
+
 # Lier les bibliothèques Qt nécessaires
 target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets)
+
 target_link_libraries(Server Threads::Threads)
+target_include_directories(Server PRIVATE /usr/include/mysql)
+target_link_directories(Server PRIVATE /usr/lib64/mysql)
+target_link_libraries(Server mysqlclient pthread)
+
+target_include_directories(CreationBD PRIVATE /usr/include/mysql)
+target_link_directories(CreationBD PRIVATE /usr/lib64/mysql)
+target_link_libraries(CreationBD mysqlclient)

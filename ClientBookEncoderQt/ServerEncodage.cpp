@@ -7,6 +7,9 @@
 #include "TCP.h"
 #include "OBEP.h"
 
+int NB_THREADS_POOL;
+int PORT_ENCODING;
+
 void HandlerSIGINT(int s);
 void TraitementConnexion(int sService);
 void* FctThreadClient(void* p);
@@ -14,7 +17,6 @@ void* FctThreadClient(void* p);
 int sEcoute;
 
 // Gestion du pool de threads
-#define NB_THREADS_POOL 2
 #define TAILLE_FILE_ATTENTE 20
 
 int socketsAcceptees[TAILLE_FILE_ATTENTE];
@@ -26,12 +28,18 @@ pthread_cond_t condSocketsAcceptees;
 int main(int argc,char* argv[])
 {
 
-	if (argc != 2)
-	{
-		printf("Erreur...\n");
-		printf("USAGE : ServeurTest portServeur\n");
+	FILE *f=fopen("server_config.txt", "r");
+
+	if(f==NULL){
+		perror("Erreur ouverture fichier server_config.txt");
 		exit(1);
 	}
+
+	fscanf(f, "NB_THREADS_POOL %d\n", &NB_THREADS_POOL);
+	fscanf(f, "PORT_ENCODING %d\n", &PORT_ENCODING);
+
+	fclose(f);
+
 
 	// Initialisation socketsAcceptees
 	pthread_mutex_init(&mutexSocketsAcceptees,NULL);
@@ -54,7 +62,7 @@ int main(int argc,char* argv[])
 	}
 
 	// Création de la socket d'écoute
-	if ((sEcoute = ServerSocket(atoi(argv[1]))) == -1)
+	if ((sEcoute = ServerSocket(PORT_ENCODING)) == -1)
 	{
 		perror("Erreur de ServeurSocket");
 		exit(1);

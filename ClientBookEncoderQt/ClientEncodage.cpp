@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <signal.h>
-#include "TCP.h">
+#include "TCP.h"
 
 int sClient;
 
@@ -49,6 +49,7 @@ int main(int argc, char* argv[]){
 	printf("password: "); fgets(password,50,stdin);
 	password[strlen(password)-1] = 0;
 	
+
 	if (!OBEP_Login(user,password))
 	{
 		exit(1);

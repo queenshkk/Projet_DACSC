@@ -5,7 +5,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h> 
-#include <netinet/in.h> //?
+#include <netinet/in.h> 
 #include "TCP.h"
 
 int ServerSocket(int port){
@@ -87,8 +87,12 @@ int Accept(int sEcoute, char *ipClient){
 	socklen_t adrClientLen = sizeof(struct sockaddr_in); // nécessaire
 	getpeername(sService, (struct sockaddr*)&adrClient, &adrClientLen);
 	getnameinfo((struct sockaddr*)&adrClient, adrClientLen, host, NI_MAXHOST, port, NI_MAXSERV, NI_NUMERICSERV | NI_NUMERICHOST);
-
+	
 	printf("Client connecté --> Adresse IP : %s -- Port : %s\n", host, port);
+
+	if (ipClient != NULL){
+		strcpy(ipClient, host);
+	}
 
 	return sService;
 }
@@ -134,10 +138,37 @@ int ClientSocket(char* ipServeur, int portServeur){
 	return sService ;
 }
 
-int Send(int sSocket,char* data,int taille){
-	
+int Send(int sSocket, char* data, int taille){
+	char buffer[5];
+
+	sprintf(buffer, "%04d", taille);
+
+	if (write(sSocket, buffer, 4) == -1){
+        return -1;
+	}
+
+    if (write(sSocket, data, taille) == -1){
+        return -1;
+    }
+
+    return taille;
+
 }
 
-int Receive(int sSocket,char* data){
-	
+int Receive(int sSocket, char* data){
+	char buffer[5];
+
+    if (read(sSocket, buffer, 4) <= 0){
+        return -1;
+    }
+
+    buffer[4] = 0;
+
+    int taille = atoi(buffer);
+
+    if (read(sSocket, data, taille) <= 0){
+        return -1;
+    }
+
+    return taille;
 }

@@ -36,7 +36,7 @@ AUTHOR authors[] = {
   {-1,"Delannoy","Claude","1946-01-06"}, // id = 5
   {-1,"Le Cun","Yan","1960-07-08"},      // id = 6
   {-1,"Verne","Jules","1828-02-08"},     // id = 7
-  {-1,"Harris","Thomas","1940-09-022"}   // id = 8
+  {-1,"Harris","Thomas","1940-09-02"}   // id = 8
 };
 int nbAuthors = 8;
 
@@ -88,6 +88,10 @@ int main(int argc,char *argv[])
     finish_with_error(connexion);
   }
 
+  if (mysql_query(connexion, "DROP TABLE IF EXISTS employees;")) {
+      finish_with_error(connexion);
+  }
+
   // Creation de la table authors
   printf("Creation de la table authors...\n");
   if (mysql_query(connexion,"CREATE TABLE authors ("
@@ -123,6 +127,15 @@ int main(int argc,char *argv[])
     finish_with_error(connexion);
   }
 
+  printf("Creation de la table employees...\n");
+  if (mysql_query(connexion, "CREATE TABLE employees ("
+                        "id INT AUTO_INCREMENT PRIMARY KEY, "
+                        "login VARCHAR(50), "
+                        "password VARCHAR(50));")) {
+      finish_with_error(connexion);
+  }
+
+
   // Ajout de tuples dans la table authors
   printf("Ajout de %d auteurs la table authors...\n",nbAuthors);
   char request[256];
@@ -154,6 +167,20 @@ int main(int argc,char *argv[])
       finish_with_error(connexion);   
     }
   }
+
+  printf("Ajout des employés...\n");
+  sprintf(request,"INSERT INTO employees VALUES (NULL,'wagner','abc123');");
+
+  if (mysql_query(connexion, request)) {
+      finish_with_error(connexion);
+  }
+
+  sprintf(request,"INSERT INTO employees VALUES (NULL,'charlet','xyz456');");
+
+  if (mysql_query(connexion, request)) {
+      finish_with_error(connexion);
+  }
+
 
   // Deconnection de la BD
   mysql_close(connexion);
