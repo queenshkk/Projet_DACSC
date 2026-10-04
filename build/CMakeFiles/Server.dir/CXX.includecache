@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/student/Documents/B3/DACSC/Projet_DACSC/ClientBookEncoderQt/OBEP.h
+
+/home/student/Documents/B3/DACSC/Projet_DACSC/ClientBookEncoderQt/ServerEncodage.cpp
+stdio.h
+-
+stdlib.h
+-
+unistd.h
+-
+string.h
+-
+signal.h
+-
+pthread.h
+-
+TCP.h
+/home/student/Documents/B3/DACSC/Projet_DACSC/ClientBookEncoderQt/TCP.h
+OBEP.h
+/home/student/Documents/B3/DACSC/Projet_DACSC/ClientBookEncoderQt/OBEP.h
+
+/home/student/Documents/B3/DACSC/Projet_DACSC/ClientBookEncoderQt/TCP.h
+
