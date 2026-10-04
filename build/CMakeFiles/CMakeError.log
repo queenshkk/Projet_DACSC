@@ -1,0 +1,64 @@
+Performing C SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD failed with the following output:
+Change Dir: /home/student/Documents/B3/DACSC/Projet_DACSC/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_50e63/fast && gmake[1] : on entre dans le répertoire « /home/student/Documents/B3/DACSC/Projet_DACSC/build/CMakeFiles/CMakeTmp »
+/usr/bin/gmake  -f CMakeFiles/cmTC_50e63.dir/build.make CMakeFiles/cmTC_50e63.dir/build
+gmake[2] : on entre dans le répertoire « /home/student/Documents/B3/DACSC/Projet_DACSC/build/CMakeFiles/CMakeTmp »
+Building C object CMakeFiles/cmTC_50e63.dir/src.c.o
+/usr/bin/cc   -DCMAKE_HAVE_LIBC_PTHREAD -o CMakeFiles/cmTC_50e63.dir/src.c.o -c /home/student/Documents/B3/DACSC/Projet_DACSC/build/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_50e63
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_50e63.dir/link.txt --verbose=1
+/usr/bin/cc  -DCMAKE_HAVE_LIBC_PTHREAD CMakeFiles/cmTC_50e63.dir/src.c.o -o cmTC_50e63 
+CMakeFiles/cmTC_50e63.dir/src.c.o : Dans la fonction « main » :
+src.c:(.text+0x2d) : référence indéfinie vers « pthread_create »
+src.c:(.text+0x39) : référence indéfinie vers « pthread_detach »
+src.c:(.text+0x45) : référence indéfinie vers « pthread_cancel »
+src.c:(.text+0x56) : référence indéfinie vers « pthread_join »
+collect2: error: ld a retourné le statut de sortie 1
+gmake[2]: *** [CMakeFiles/cmTC_50e63.dir/build.make:106: cmTC_50e63] Error 1
+gmake[2] : on quitte le répertoire « /home/student/Documents/B3/DACSC/Projet_DACSC/build/CMakeFiles/CMakeTmp »
+gmake[1]: *** [Makefile:140: cmTC_50e63/fast] Error 2
+gmake[1] : on quitte le répertoire « /home/student/Documents/B3/DACSC/Projet_DACSC/build/CMakeFiles/CMakeTmp »
+
+
+Source file was:
+#include <pthread.h>
+
+void* test_func(void* data)
+{
+  return data;
+}
+
+int main(void)
+{
+  pthread_t thread;
+  pthread_create(&thread, NULL, test_func, NULL);
+  pthread_detach(thread);
+  pthread_cancel(thread);
+  pthread_join(thread, NULL);
+  pthread_atfork(NULL, NULL, NULL);
+  pthread_exit(NULL);
+
+  return 0;
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/student/Documents/B3/DACSC/Projet_DACSC/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake cmTC_90020/fast && gmake[1] : on entre dans le répertoire « /home/student/Documents/B3/DACSC/Projet_DACSC/build/CMakeFiles/CMakeTmp »
+/usr/bin/gmake  -f CMakeFiles/cmTC_90020.dir/build.make CMakeFiles/cmTC_90020.dir/build
+gmake[2] : on entre dans le répertoire « /home/student/Documents/B3/DACSC/Projet_DACSC/build/CMakeFiles/CMakeTmp »
+Building C object CMakeFiles/cmTC_90020.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create -o CMakeFiles/cmTC_90020.dir/CheckFunctionExists.c.o -c /usr/share/cmake/Modules/CheckFunctionExists.c
+Linking C executable cmTC_90020
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_90020.dir/link.txt --verbose=1
+/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=pthread_create CMakeFiles/cmTC_90020.dir/CheckFunctionExists.c.o -o cmTC_90020  -lpthreads 
+/usr/bin/ld : ne peut trouver -lpthreads
+collect2: error: ld a retourné le statut de sortie 1
+gmake[2]: *** [CMakeFiles/cmTC_90020.dir/build.make:106: cmTC_90020] Error 1
+gmake[2] : on quitte le répertoire « /home/student/Documents/B3/DACSC/Projet_DACSC/build/CMakeFiles/CMakeTmp »
+gmake[1]: *** [Makefile:140: cmTC_90020/fast] Error 2
+gmake[1] : on quitte le répertoire « /home/student/Documents/B3/DACSC/Projet_DACSC/build/CMakeFiles/CMakeTmp »
+
+
+
