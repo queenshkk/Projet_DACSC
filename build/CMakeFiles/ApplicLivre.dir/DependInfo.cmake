@@ -4,6 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
+  "/home/student/Documents/B3/DACSC/Projet_DACSC/ClientBookEncoderQt/TCP.cpp" "/home/student/Documents/B3/DACSC/Projet_DACSC/build/CMakeFiles/ApplicLivre.dir/ClientBookEncoderQt/TCP.cpp.o"
   "/home/student/Documents/B3/DACSC/Projet_DACSC/ClientBookEncoderQt/main.cpp" "/home/student/Documents/B3/DACSC/Projet_DACSC/build/CMakeFiles/ApplicLivre.dir/ClientBookEncoderQt/main.cpp.o"
   "/home/student/Documents/B3/DACSC/Projet_DACSC/ClientBookEncoderQt/mainwindowclientbookencoder.cpp" "/home/student/Documents/B3/DACSC/Projet_DACSC/build/CMakeFiles/ApplicLivre.dir/ClientBookEncoderQt/mainwindowclientbookencoder.cpp.o"
   "/home/student/Documents/B3/DACSC/Projet_DACSC/ClientBookEncoderQt/moc_mainwindowclientbookencoder.cpp" "/home/student/Documents/B3/DACSC/Projet_DACSC/build/CMakeFiles/ApplicLivre.dir/ClientBookEncoderQt/moc_mainwindowclientbookencoder.cpp.o"

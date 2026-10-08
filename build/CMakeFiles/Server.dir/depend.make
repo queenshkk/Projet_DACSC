@@ -3,6 +3,18 @@
 
 CMakeFiles/Server.dir/ClientBookEncoderQt/OBEP.cpp.o: ../ClientBookEncoderQt/OBEP.cpp
 CMakeFiles/Server.dir/ClientBookEncoderQt/OBEP.cpp.o: ../ClientBookEncoderQt/OBEP.h
+CMakeFiles/Server.dir/ClientBookEncoderQt/OBEP.cpp.o: /usr/include/mysql/errmsg.h
+CMakeFiles/Server.dir/ClientBookEncoderQt/OBEP.cpp.o: /usr/include/mysql/field_types.h
+CMakeFiles/Server.dir/ClientBookEncoderQt/OBEP.cpp.o: /usr/include/mysql/my_command.h
+CMakeFiles/Server.dir/ClientBookEncoderQt/OBEP.cpp.o: /usr/include/mysql/my_compress.h
+CMakeFiles/Server.dir/ClientBookEncoderQt/OBEP.cpp.o: /usr/include/mysql/my_list.h
+CMakeFiles/Server.dir/ClientBookEncoderQt/OBEP.cpp.o: /usr/include/mysql/mysql.h
+CMakeFiles/Server.dir/ClientBookEncoderQt/OBEP.cpp.o: /usr/include/mysql/mysql/client_plugin.h
+CMakeFiles/Server.dir/ClientBookEncoderQt/OBEP.cpp.o: /usr/include/mysql/mysql/plugin_auth_common.h
+CMakeFiles/Server.dir/ClientBookEncoderQt/OBEP.cpp.o: /usr/include/mysql/mysql/udf_registration_types.h
+CMakeFiles/Server.dir/ClientBookEncoderQt/OBEP.cpp.o: /usr/include/mysql/mysql_com.h
+CMakeFiles/Server.dir/ClientBookEncoderQt/OBEP.cpp.o: /usr/include/mysql/mysql_time.h
+CMakeFiles/Server.dir/ClientBookEncoderQt/OBEP.cpp.o: /usr/include/mysql/mysql_version.h
 
 CMakeFiles/Server.dir/ClientBookEncoderQt/ServerEncodage.cpp.o: ../ClientBookEncoderQt/OBEP.h
 CMakeFiles/Server.dir/ClientBookEncoderQt/ServerEncodage.cpp.o: ../ClientBookEncoderQt/ServerEncodage.cpp

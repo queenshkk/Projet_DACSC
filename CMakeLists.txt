@@ -19,6 +19,7 @@ add_executable(ApplicLivre
     ClientBookEncoderQt/main.cpp
     ClientBookEncoderQt/mainwindowclientbookencoder.cpp
     ClientBookEncoderQt/moc_mainwindowclientbookencoder.cpp
+    ClientBookEncoderQt/TCP.cpp
 )
 
 add_executable(Client

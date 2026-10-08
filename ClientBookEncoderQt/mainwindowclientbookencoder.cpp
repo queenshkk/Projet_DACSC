@@ -1,10 +1,19 @@
 #include "mainwindowclientbookencoder.h"
 #include "ui_mainwindowclientbookencoder.h"
 #include "unistd.h"
+#include <stdio.h>
 #include <QInputDialog>
 #include <QMessageBox>
 #include <iostream>
+#include "TCP.h"
+
 using namespace std;
+
+int sClient;
+int idAuthors[100];
+int idSubjects[100];
+int nbAuthors = 0;
+int nbSubjects = 0;
 
 MainWindowClientBookEncoder::MainWindowClientBookEncoder(QWidget *parent)
     : QMainWindow(parent)
@@ -32,7 +41,7 @@ MainWindowClientBookEncoder::MainWindowClientBookEncoder(QWidget *parent)
     this->logoutOk();
 
     // Exemples d'utilisation (à supprimer)
-    this->addTupleTableBooks(1,"Les Thanatonautes","Bernard Werber","Science-Fiction","978-2253139225",505,1999,9.7f,3);
+    /*this->addTupleTableBooks(1,"Les Thanatonautes","Bernard Werber","Science-Fiction","978-2253139225",505,1999,9.7f,3);
     this->addTupleTableBooks(6,"Dune","Frank Herbert","Science-Fiction","978-2266320481",929,2021,11.95f,13);
     this->addTupleTableBooks(13,"Le silence des agneaux","Thomas Harris","Thriller","978-2266208949",377,2015,7.7f,17);
 
@@ -41,6 +50,7 @@ MainWindowClientBookEncoder::MainWindowClientBookEncoder(QWidget *parent)
 
     this->addComboBoxSubjects("Roman");
     this->addComboBoxSubjects("Science-fiction");
+    */
 }
 
 MainWindowClientBookEncoder::~MainWindowClientBookEncoder() {
@@ -231,16 +241,89 @@ int MainWindowClientBookEncoder::dialogInputInt(const string& title,const string
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void MainWindowClientBookEncoder::on_pushButtonAddAuthor_clicked() {
     string lastName = this->dialogInputText("Nouvel auteur","Nom ?");
+    if (lastName.empty()) return;
     string firstName = this->dialogInputText("Nouvel auteur","Prénom ?");
+    if (firstName.empty()) return;
     string birthDate = this->dialogInputText("Nouvel auteur","Date de naissance (yyyy-mm-dd) ?");
+    if (birthDate.empty()) return;
+
     cout << "Nom : " << lastName << endl;
     cout << "Prénom : " << firstName << endl;
     cout << "Date de naissance : " << birthDate << endl;
+
+    char requete[200], reponse[10000];
+
+    sprintf(requete,"ADD_AUTHOR#%s#%s",lastName.c_str(),firstName.c_str());
+
+    Send(sClient,requete,strlen(requete));
+
+    int nbLus = Receive(sClient,reponse);
+    if (nbLus <= 0){
+        return;
+    }
+
+    reponse[nbLus] = 0;
+
+    printf("Reponse recue : %s\n",reponse);
+    char *ptr = strtok(reponse,"#");
+    ptr = strtok(NULL,"#");
+
+    if (strcmp(ptr,"ok") == 0)
+    {
+        ptr = strtok(NULL,"#");
+        this->dialogMessage("Auteur","Auteur ajouté avec ID : " + string(ptr));
+        
+        idAuthors[nbAuthors] = atoi(ptr);
+        nbAuthors++;
+
+        this->addComboBoxAuthors(firstName + " " + lastName);
+    }
+    else
+    {
+        ptr = strtok(NULL,"#");
+        this->dialogError("Auteur","Erreur ajout auteur : " + string(ptr));
+    }
+
 }
 
 void MainWindowClientBookEncoder::on_pushButtonAddSubject_clicked() {
     string name = this->dialogInputText("Nouveau sujet","Nom ?");
+    if (name.empty()) return;
     cout << "Nom : " << name << endl;
+
+    char requete[200], reponse[10000];
+
+    sprintf(requete, "ADD_SUBJECT#%s", name.c_str());
+
+    Send(sClient, requete, strlen(requete));
+
+    int nbLus=Receive(sClient, reponse);
+
+    if(nbLus<=0){
+        return;
+    }
+
+    reponse[nbLus] = 0;
+
+    printf("Reponse recue : %s\n",reponse);
+    char *ptr=strtok(reponse, "#");
+    ptr = strtok(NULL,"#");
+
+    if(strcmp(ptr, "ok")==0){
+        ptr=strtok(NULL,"#");
+        this->dialogMessage("Sujet","Sujet ajouté avec ID: " + string(ptr));
+
+        idSubjects[nbSubjects] = atoi(ptr);
+        nbSubjects++;
+        this->addComboBoxSubjects(name);
+    }
+    else
+    {
+        ptr = strtok(NULL,"#");
+        this->dialogError("Sujet","Erreur ajout sujet: " + string(ptr));
+    }
+
+
 }
 
 void MainWindowClientBookEncoder::on_pushButtonAddBook_clicked() {
@@ -253,6 +336,66 @@ void MainWindowClientBookEncoder::on_pushButtonAddBook_clicked() {
 
     cout << "selection auteur = " << this->getSelectionAuthor() << endl;
     cout << "selection sujet  = " << this->getSelectionSubject() << endl;
+
+    int indiceAuteur = ui->comboBoxAuthors->currentIndex();
+    int indiceSujet = ui->comboBoxSubjects->currentIndex();
+
+    if (indiceAuteur < 0 || indiceSujet < 0)
+    {
+        this->dialogError("Livre","Selectionnez un auteur et un sujet");
+        return;
+    }
+
+    int authorId = idAuthors[indiceAuteur];
+    int subjectId = idSubjects[indiceSujet];
+
+    char requete[200], reponse[10000];
+
+    if (this->getTitle().empty() || this->getIsbn().empty())
+    {
+        this->dialogError("Livre", "Remplissez le titre et l'ISBN");
+        return;
+    }
+
+    sprintf(requete, "ADD_BOOK#%d#%d#%s#%s#%d#%d#%f#%d", authorId, subjectId,
+        this->getTitle().c_str(), this->getIsbn().c_str(), this->getPageCount(),
+        this->getStockQuantity(), this->getPrice(), this->getPublishYear());
+
+    Send(sClient, requete, strlen(requete));
+
+    int nbLus=Receive(sClient, reponse);
+
+    if(nbLus<=0){
+        return;
+    }
+
+    reponse[nbLus] = 0;
+
+    printf("Reponse recue : %s\n",reponse);
+    char *ptr=strtok(reponse, "#");
+    ptr = strtok(NULL,"#");
+
+    if(strcmp(ptr, "ok")==0){
+        ptr=strtok(NULL,"#");
+        int id = atoi(ptr);
+
+        this->dialogMessage("Livre","Livre ajouté");
+        this->addTupleTableBooks(id,
+                                 this->getTitle(),
+                                 this->getSelectionAuthor(),
+                                 this->getSelectionSubject(),
+                                 this->getIsbn(),
+                                 this->getPageCount(),
+                                 this->getPublishYear(),
+                                 this->getPrice(),
+                                 this->getStockQuantity());
+    }
+    else
+    {
+        ptr = strtok(NULL,"#");
+        this->dialogError("Livre","Erreur ajout livre: " + string(ptr));
+    }
+
 }
 
 void MainWindowClientBookEncoder::on_pushButtonClear_clicked() {
@@ -266,11 +409,133 @@ void MainWindowClientBookEncoder::on_pushButtonClear_clicked() {
 
 void MainWindowClientBookEncoder::on_actionLogin_triggered() {
     string login = this->dialogInputText("Entrée en session","Login ?");
+    if (login.empty()) return;
     string password = this->dialogInputText("Entrée en session","Password ?");
-    this->loginOk();
+    if (password.empty()) return;
+
+    sClient=ClientSocket((char*)"0.0.0.0", 5000);
+
+    if(sClient==-1){
+        this->dialogError("Erreur","Connexion au serveur impossible");
+        return;
+    }
+
+    char requete[200], reponse[10000];
+    sprintf(requete,"LOGIN#%s#%s",login.c_str(),password.c_str());
+
+    Send(sClient,requete,strlen(requete));
+
+    int nbLus = Receive(sClient,reponse);
+
+    if (nbLus <= 0)
+    {
+        this->dialogError("Erreur","Erreur de reception");
+        ::close(sClient);
+        sClient = -1;
+        return;
+    }
+
+    reponse[nbLus] = 0;
+
+    // Parsing de la reponse
+    char *ptr = strtok(reponse,"#");
+    ptr = strtok(NULL,"#");
+
+    if (strcmp(ptr,"ok") == 0)
+    {
+        this->loginOk();
+        this->dialogMessage("Login","Login OK");
+
+        // GET_AUTHORS
+        sprintf(requete,"GET_AUTHORS");
+        Send(sClient,requete,strlen(requete));
+
+        nbLus = Receive(sClient,reponse);
+        if (nbLus <= 0){
+            return;
+        } 
+
+        reponse[nbLus] = 0;
+
+        ptr = strtok(reponse,"#");
+        ptr = strtok(NULL,"#");
+
+        if (strcmp(ptr,"ok") == 0)
+        {
+            
+            nbAuthors = 0;
+            this->clearComboBoxAuthors();
+
+            while ((ptr = strtok(NULL,"#")) != NULL)
+            {
+                int id = atoi(ptr);
+
+                ptr = strtok(NULL,"#");
+                string lastName = ptr;
+
+                ptr = strtok(NULL,"#");
+                string firstName = ptr;
+
+                idAuthors[nbAuthors] = id;
+                nbAuthors++;
+
+                this->addComboBoxAuthors(firstName + " " + lastName);
+            }
+        }
+
+        // GET_SUBJECTS
+        sprintf(requete,"GET_SUBJECTS");
+        Send(sClient,requete,strlen(requete));
+
+        nbLus = Receive(sClient,reponse);
+        if (nbLus <= 0){
+           return; 
+        } 
+
+        reponse[nbLus] = 0;
+
+        ptr = strtok(reponse,"#");
+        ptr = strtok(NULL,"#");
+
+        if (strcmp(ptr,"ok") == 0)
+        {
+            nbSubjects = 0;
+            this->clearComboBoxSubjects();
+
+            while ((ptr = strtok(NULL,"#")) != NULL)
+            {
+                int id = atoi(ptr);
+
+                ptr = strtok(NULL,"#");
+                string name = ptr;
+
+                idSubjects[nbSubjects] = id;
+                nbSubjects++;
+                this->addComboBoxSubjects(name);
+            }
+        }
+    }
+    else
+    {
+        ptr = strtok(NULL,"#");
+        this->dialogError("Login",ptr);
+        ::close(sClient);
+        sClient = -1;
+    }
 }
 
 void MainWindowClientBookEncoder::on_actionLogout_triggered() {
+    char requete[200], reponse[10000];
+
+    sprintf(requete,"LOGOUT");
+
+    Send(sClient,requete,strlen(requete));
+
+    Receive(sClient,reponse);
+
+    ::close(sClient);
+    sClient = -1;
+
     this->logoutOk();
 }
 

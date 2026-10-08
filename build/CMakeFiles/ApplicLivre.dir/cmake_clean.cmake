@@ -1,6 +1,7 @@
 file(REMOVE_RECURSE
   "ApplicLivre"
   "ApplicLivre.pdb"
+  "CMakeFiles/ApplicLivre.dir/ClientBookEncoderQt/TCP.cpp.o"
   "CMakeFiles/ApplicLivre.dir/ClientBookEncoderQt/main.cpp.o"
   "CMakeFiles/ApplicLivre.dir/ClientBookEncoderQt/mainwindowclientbookencoder.cpp.o"
   "CMakeFiles/ApplicLivre.dir/ClientBookEncoderQt/moc_mainwindowclientbookencoder.cpp.o"

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <string.h> // pour memset
+#include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h> 
@@ -17,40 +17,45 @@ int ServerSocket(int port){
 	if ((sEcoute = socket(AF_INET, SOCK_STREAM, 0)) == -1)
 	{
 		perror("Erreur de socket()");
-		exit(1);
+		return -1;
 	}
 	printf("Socket créee = %d\n", sEcoute);
-	
 
 	// Construction de l'adresse réseau de la socket
 	struct addrinfo hints;
 	struct addrinfo *results;
+
 	memset(&hints, 0,sizeof(struct addrinfo));
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_STREAM;
-	hints.ai_flags = AI_PASSIVE | AI_NUMERICSERV; // pour une connexion passive
+	hints.ai_flags = AI_PASSIVE | AI_NUMERICSERV;
 	
 	char portServ[10];
     sprintf(portServ, "%d", port);
 
 	if (getaddrinfo(NULL, portServ, &hints, &results) != 0)
 	{
+		printf("Erreur de getaddrinfo()\n");
 		close(sEcoute);
-		exit(1);
+		return -1;
 	}
 
 	// Affichage du contenu de l'adresse obtenue
 	char host[NI_MAXHOST];
 	char port2[NI_MAXSERV];
 
-	getnameinfo(results->ai_addr, results->ai_addrlen, host, NI_MAXHOST, port2, NI_MAXSERV,NI_NUMERICSERV | NI_NUMERICHOST);
+	getnameinfo(results->ai_addr, results->ai_addrlen, 
+				host, NI_MAXHOST, port2, NI_MAXSERV,
+				NI_NUMERICSERV | NI_NUMERICHOST);
+
 	printf("Mon adresse IP : %s -- Mon port : %s\n", host, port2);
 
 	// Liaison de la socket à l'adresse réseau
 	if (bind(sEcoute, results->ai_addr, results->ai_addrlen) < 0)
 	{
 		perror("Erreur de bind()");
-		exit(1);
+		close(sEcoute);
+		return -1;
 	}
 
 	freeaddrinfo(results);
@@ -60,7 +65,8 @@ int ServerSocket(int port){
 	if (listen(sEcoute, SOMAXCONN) == -1)
 	{
 		perror("Erreur de listen()");
-		exit(1);
+		close(sEcoute);
+		return -1;
 	}
 	printf("listen() réussi !\n");
 
@@ -74,7 +80,7 @@ int Accept(int sEcoute, char *ipClient){
 	if ((sService= accept(sEcoute, NULL, NULL)) == -1)
 	{
 		perror("Erreur de accept()");
-		exit(1);
+		return -1;
 	}
 	printf("accept() réussi !");
 	printf("Socket de service = %d\n", sService);
@@ -84,14 +90,16 @@ int Accept(int sEcoute, char *ipClient){
 	char port[NI_MAXSERV];
 
 	struct sockaddr_in adrClient; 
-	socklen_t adrClientLen = sizeof(struct sockaddr_in); // nécessaire
+	socklen_t adrClientLen = sizeof(struct sockaddr_in);
+
 	getpeername(sService, (struct sockaddr*)&adrClient, &adrClientLen);
 	getnameinfo((struct sockaddr*)&adrClient, adrClientLen, host, NI_MAXHOST, port, NI_MAXSERV, NI_NUMERICSERV | NI_NUMERICHOST);
 	
 	printf("Client connecté --> Adresse IP : %s -- Port : %s\n", host, port);
 
-	if (ipClient != NULL){
-		strcpy(ipClient, host);
+	if (ipClient != NULL)
+	{
+	    strcpy(ipClient, host);
 	}
 
 	return sService;
@@ -106,7 +114,7 @@ int ClientSocket(char* ipServeur, int portServeur){
 	if ((sService = socket(AF_INET, SOCK_STREAM, 0)) == -1)
 	{
 		perror("Erreur de socket()");
-		exit(1);
+		return -1;
 	}
 	
 	printf("Socket créee = %d\n", sService);
@@ -114,6 +122,7 @@ int ClientSocket(char* ipServeur, int portServeur){
 	// Construction de l'adresse réseau
 	struct addrinfo hints;
 	struct addrinfo *results;
+
 	memset(&hints,0,sizeof(struct addrinfo));
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_STREAM;
@@ -123,15 +132,19 @@ int ClientSocket(char* ipServeur, int portServeur){
     sprintf(portServ, "%d", portServeur);
 
 	if (getaddrinfo(ipServeur, portServ, &hints, &results) != 0){
-		exit(1);
+		close(sService);
+        return -1;
 	}
-	
+
 	// Demande de connexion
 	if (connect(sService, results->ai_addr, results->ai_addrlen) == -1)
 	{
 		perror("Erreur de connect()");
-		exit(1);
+		close(sService);
+		return -1;
 	}
+
+    freeaddrinfo(results);
 
 	printf("connect() réussi !");
 
@@ -141,13 +154,20 @@ int ClientSocket(char* ipServeur, int portServeur){
 int Send(int sSocket, char* data, int taille){
 	char buffer[5];
 
-	sprintf(buffer, "%04d", taille);
-
-	if (write(sSocket, buffer, 4) == -1){
+    if (taille < 0 || taille > 9999)
+    {
         return -1;
-	}
+    }
 
-    if (write(sSocket, data, taille) == -1){
+    sprintf(buffer, "%04d", taille);
+
+    // Envoi de la taille
+    if (write(sSocket, buffer, 4) != 4){
+        return -1;
+    }
+
+    // Envoi des données
+    if (write(sSocket, data, taille) != taille){
         return -1;
     }
 
@@ -157,16 +177,18 @@ int Send(int sSocket, char* data, int taille){
 
 int Receive(int sSocket, char* data){
 	char buffer[5];
+    int taille;
 
-    if (read(sSocket, buffer, 4) <= 0){
+    if (read(sSocket, buffer, 4) != 4)
+    {
         return -1;
     }
 
-    buffer[4] = 0;
+    buffer[4] = '\0';
+    taille = atoi(buffer);
 
-    int taille = atoi(buffer);
-
-    if (read(sSocket, data, taille) <= 0){
+    if (read(sSocket, data, taille) != taille)
+    {
         return -1;
     }
 
