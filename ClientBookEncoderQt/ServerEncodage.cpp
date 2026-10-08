@@ -25,6 +25,7 @@ int indiceEcriture=0, indiceLecture=0;
 pthread_mutex_t mutexSocketsAcceptees;
 pthread_cond_t condSocketsAcceptees;
 
+
 int main(int argc,char* argv[])
 {
 
@@ -90,21 +91,32 @@ int main(int argc,char* argv[])
 			exit(1);
 		}
 
-	printf("Connexion acceptée : IP=%s socket=%d\n", ipClient, sService);
+		printf("Connexion acceptée : IP=%s socket=%d\n", ipClient, sService);
 
-	// Insertion en liste d'attente et réveil d'un thread du pool
-	// (Production d'une tâche)
-	pthread_mutex_lock(&mutexSocketsAcceptees);
-	socketsAcceptees[indiceEcriture] = sService; // !!!
-	indiceEcriture++;
-	
-	if (indiceEcriture == TAILLE_FILE_ATTENTE)
-	{
-		indiceEcriture = 0;
-	} 
+		// Insertion en liste d'attente et réveil d'un thread du pool
+		// (Production d'une tâche)
+		pthread_mutex_lock(&mutexSocketsAcceptees);
+		
+		// Vérifier si la place est libre
+        if (socketsAcceptees[indiceEcriture] != -1)
+        {
+            printf("File d'attente pleine.\n");
+            close(sService);
+        }
+        else
+        {
+            socketsAcceptees[indiceEcriture] = sService;
+            indiceEcriture++;
 
-	pthread_mutex_unlock(&mutexSocketsAcceptees);
-	pthread_cond_signal(&condSocketsAcceptees);
+            if (indiceEcriture == TAILLE_FILE_ATTENTE)
+            {
+                indiceEcriture = 0;
+            }
+        }
+
+
+		pthread_mutex_unlock(&mutexSocketsAcceptees);
+		pthread_cond_signal(&condSocketsAcceptees);
 	}
 
 
@@ -120,7 +132,8 @@ void* FctThreadClient(void* p)
 		printf("\t[THREAD %p] Attente socket...\n", pthread_self());
 		// Attente d'une tâche
 		pthread_mutex_lock(&mutexSocketsAcceptees);
-		while (indiceEcriture == indiceLecture){
+		
+		while (socketsAcceptees[indiceLecture] == -1){
 			pthread_cond_wait(&condSocketsAcceptees, &mutexSocketsAcceptees);
 		}
 
@@ -150,13 +163,14 @@ void HandlerSIGINT(int s)
 			} 
 	}
 	pthread_mutex_unlock(&mutexSocketsAcceptees);
+
 	OBEP_Close();
 	exit(0);
 }
 
 void TraitementConnexion(int sService)
 {
-	char requete[200], reponse[200];
+	char requete[10000], reponse[10000];
 	int nbLus, nbEcrits;
 	bool onContinue = true;
 
@@ -168,7 +182,7 @@ void TraitementConnexion(int sService)
 		{
 			perror("Erreur de Receive");
 			close(sService);
-			HandlerSIGINT(0);
+			return;
 		}
 
 		// ***** Fin de connexion ? *****************
@@ -190,14 +204,14 @@ void TraitementConnexion(int sService)
 		{
 			perror("Erreur de Send");
 			close(sService);
-			HandlerSIGINT(0);
+			return;
 		}
 
 		printf("\t[THREAD %p] Reponse envoyee = %s\n", pthread_self(), reponse);
 		
 		if (!onContinue){
 			printf("\t[THREAD %p] Fin de connexion de la socket %d\n", pthread_self(), sService);
-
+    		close(sService);
 		}
 	}
 }

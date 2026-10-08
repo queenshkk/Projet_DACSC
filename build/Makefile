@@ -296,6 +296,7 @@ ClientBookEncoderQt/TCP.o: ClientBookEncoderQt/TCP.cpp.o
 # target to build an object file
 ClientBookEncoderQt/TCP.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/ClientBookEncoderQt/TCP.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ApplicLivre.dir/build.make CMakeFiles/ApplicLivre.dir/ClientBookEncoderQt/TCP.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Client.dir/build.make CMakeFiles/Client.dir/ClientBookEncoderQt/TCP.cpp.o
 .PHONY : ClientBookEncoderQt/TCP.cpp.o
 
@@ -306,6 +307,7 @@ ClientBookEncoderQt/TCP.i: ClientBookEncoderQt/TCP.cpp.i
 # target to preprocess a source file
 ClientBookEncoderQt/TCP.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/ClientBookEncoderQt/TCP.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ApplicLivre.dir/build.make CMakeFiles/ApplicLivre.dir/ClientBookEncoderQt/TCP.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Client.dir/build.make CMakeFiles/Client.dir/ClientBookEncoderQt/TCP.cpp.i
 .PHONY : ClientBookEncoderQt/TCP.cpp.i
 
@@ -316,6 +318,7 @@ ClientBookEncoderQt/TCP.s: ClientBookEncoderQt/TCP.cpp.s
 # target to generate assembly for a file
 ClientBookEncoderQt/TCP.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/ClientBookEncoderQt/TCP.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ApplicLivre.dir/build.make CMakeFiles/ApplicLivre.dir/ClientBookEncoderQt/TCP.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Client.dir/build.make CMakeFiles/Client.dir/ClientBookEncoderQt/TCP.cpp.s
 .PHONY : ClientBookEncoderQt/TCP.cpp.s
 
