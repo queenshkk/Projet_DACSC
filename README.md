@@ -1,8 +1,8 @@
 # Projet_DACSC - Application d'encodage gestion de livres
 
 ## Etape 1
-Application client-serveur développée en C/C++ sous Linux.
-Le serveur utilise des sockets TCP, un pool de threads POSIX et une base de données MySQL. Le client possède une interface graphique Qt.
+Application client-serveur développée en C/C++ sous Linux
+Le serveur utilise des sockets TCP, un pool de threads POSIX et une base de données MySQL. Le client possède une interface graphique Qt
 
 ## Fonctionnalités
 - LOGIN / LOGOUT
@@ -12,8 +12,8 @@ Le serveur utilise des sockets TCP, un pool de threads POSIX et une base de donn
 - Gestion de plusieurs clients simultanément
 
 ## Fonctionnement
-Le client communique avec le serveur grâce au protocole OBEP. Les champs des requêtes sont séparés par #.
-Après connexion, les auteurs et les sujets sont chargés depuis MySQL.
+Le client communique avec le serveur grâce au protocole OBEP. Les champs des requêtes sont séparés par #
+Après connexion, les auteurs et les sujets sont chargés depuis MySQL
 
 ## Exécution
 - Démarrer MySQL
@@ -21,8 +21,8 @@ Après connexion, les auteurs et les sujets sont chargés depuis MySQL.
 - Lancer le client Qt et se connecter
 
 ## Étape 2 — Java
-Développement d'un Client Encodage, d'un Client Achat et d'un Serveur Achat en Java.
-Les interfaces graphiques sont réalisées avec Swing selon le modèle MVC.
+Développement d'un Client Encodage, d'un Client Achat et d'un Serveur Achat en Java
+Les interfaces graphiques sont réalisées avec Swing selon le modèle MVC
 
 ## Fonctionnalités
 ### Client Encodage
@@ -54,7 +54,6 @@ Les interfaces graphiques sont réalisées avec Swing selon le modèle MVC.
 - Démarrer le Serveur Achat Java pour le Client Achat
 - Lancer les clients Java correspondants.
 
-# Configuration
+## Configuration
 Le fichier serveurachat.properties doit être configuré localement pour la connexion MySQL.
-
 Les identifiants personnels ne doivent pas être publiés sur GitHub.
